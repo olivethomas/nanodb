@@ -3,13 +3,23 @@ import os
 from collections import OrderedDict
 
 class storage:
-    def __init__(self,fname,mode="r"):
+    def __init__(self,fname):
+        self.fptr=None
+        filename=str(fname)+".json"
+        if os.path.isfile(filename):
+            self.fptr=open(filename,"r+")
+            self.fptr.close()
+               
+         
+            
+    def fcreate(self,fname,mode="r"):
         filename=str(fname)+".json"
         if not os.path.isfile(filename):
             self.fptr=open(filename,"w")
             #self.fptr.write("{}")
             self.fptr.close()
         #self.fptr=open(filename,mode)
+        
 
     def fopen(self,fname,mode="r"):
         filename=str(fname)+".json"
@@ -37,7 +47,7 @@ class storage:
             return
         self.fptr.seek(0,0)
         data.update(matter)
-        print (data)
+        #print (data)
         #self.fptr.seek(0,2)
         json.dump(data,self.fptr)
         self.fclose()
@@ -46,12 +56,12 @@ class storage:
         self.fptr.close()
 
 
-x=files("table1","r+")
-print (x.fread("table1"))
-x.fwrite({3 : {"hi":1,"hello":2} }, "table1")
+#x=storage("table1","r+")
+#print (x.fread("table1"))
+#x.fwrite({3 : {"hi":1,"hello":2} }, "table1")
 #x.fwrite(OrderedDict([('hi1', 1), ('hello1', 2)]))
-print (x.fread("table1"))
-x.fclose()
+#print (x.fread("table1"))
+#x.fclose()
 
         
         
