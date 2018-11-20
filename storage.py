@@ -35,9 +35,9 @@ class Storage:
         self.fptr.seek(0,0)
         #self.data=json.loads(self.fptr.read())
         try:
-            self.data = json.loads(self.fptr.read(), object_hook=OrderedDict)
+            self.data = json.loads(self.fptr.read())
         except ValueError:
-            self.data = OrderedDict()
+            self.data ={}
         self.fclose()
         return self.data
 
