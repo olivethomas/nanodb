@@ -2,7 +2,7 @@ import json
 import os
 from collections import OrderedDict
 
-class storage:
+class Storage:
     def __init__(self,fname):
         self.fptr=None
         filename=str(fname)+".json"
