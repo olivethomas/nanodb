@@ -2,8 +2,11 @@
 import socket 
 import os
 from collections import OrderedDict
-from storage import storage 
+from storage import Storage
+from query import Query
 import sys
+import json
+import pickle
 
 def convert_to_bytes(no):
     result = bytearray()
@@ -20,7 +23,7 @@ print ("Socket successfully created")
   
 # reserve a port on your computer in our 
 # case it is 12345 but it can be anything 
-port = 12345                
+port = 12345            
   
    
 # Next bind to the port 
@@ -28,7 +31,11 @@ port = 12345
 # instead we have inputted an empty string 
 # this makes the server listen to requests  
 # coming from other computers on the network 
-s.bind(('', port))         
+try:
+    s.bind(('', port))
+except:
+    print ("Cannot bind to port")
+    
 print ("socket binded to %s" %(port)) 
   
 # put the socket into listening mode 
@@ -47,18 +54,24 @@ while True:
     c.send(('Thank you for connecting').encode()) 
 
     query=c.recv(1024).decode()
-    tokens=query.split(" ")
-    filename=tokens[-1]
+    queryobj = Query()
+    result = queryobj.match(query)
     
-    if os.path.exists(filename):
-        length = os.path.getsize(filename)
-        c.send(convert_to_bytes(length)) # has to be 4 bytes
-        with open(filename, 'r') as infile:
+    if isinstance(result,str):
+        c.send(convert_to_bytes(0)) 
+        c.send(result.encode())
+    else:
+        c.send(convert_to_bytes(1)) 
+        #buff = json.dumps(result).encode('utf-8')
+        #print (buff)
+        #c.sendall(buff)
+        tcp_send(pickle.dumps(result))
+    """
             d = infile.read(1024)
-            while d:
+    while d:
                 c.send(d.encode())
                 d = infile.read(1024)
-    
+    """
   
    # Close the connection with the client 
     c.close()

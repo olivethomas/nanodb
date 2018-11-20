@@ -2,7 +2,8 @@
 import socket  
 import os
 import sys
-
+import json
+import pickle
 def bytes_to_number(b):
     # if Python2.x
     # b = map(ord, b)
@@ -29,8 +30,24 @@ print (s.recv(1024).decode())
 query=input()
 
 s.send(query.encode())
-size = s.recv(4) # assuming that the size won't be bigger then 1GB
-size = bytes_to_number(size)
+signal = s.recv(4) # assuming that the size won't be bigger then 1GB
+signal = bytes_to_number(signal)
+print(signal)
+
+if signal:
+    '''
+    b = b''
+    while 1:
+        tmp = s.recv(1024)
+        b += tmp
+    print (b)
+    data = json.loads(b.decode('utf-8'))'''
+    data = pickle.loads(tcp_recieve())
+    print (data)
+else:
+    data = s.recv(1024).decode()
+    print (data)
+"""
 current_size = 0
 buffer ="b"
 while current_size < size:
@@ -43,5 +60,6 @@ while current_size < size:
         # you can stream here to disk
     current_size += len(data)
     print (data)
+    """
 # close the connection 
 s.close()

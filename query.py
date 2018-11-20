@@ -6,14 +6,13 @@ import re
 class Query:
     def __init__(self):
         self.mid = Midlayer()
-        self.retval=1
+        self.retval=""
 
     def match(self,command):
         pattern = re.compile("(\w+)\.([a-z]+)\(([^\(\)]*)\)")
         matchobj = pattern.fullmatch(command)
         if matchobj is None:
-            self.retval=101
-            print ("Invalid query syntax")
+            self.retval = "Invalid query syntax"
             return self.retval
         self.tablename = matchobj.group(1)
         self.instr = matchobj.group(2)
@@ -34,8 +33,7 @@ class Query:
 
         func = self.find_query()
         if isinstance(func, int):
-            self.retval=101
-            print ("Invalid query syntax")
+            self.retval = "Invalid query syntax"
             return self.retval
         
         func(self.tablename,self.cond)
@@ -57,13 +55,14 @@ class Query:
 
     def _create(self,db_name,cond):
         self.mid.create(db_name)
+        self.retval="Creation successfull"
 
     def _display(self,db_name,cond):
         data = self.mid.view_records(db_name)
         if data is not None:
-            print (data)
+            self.retval = data
         else:
-            print ("DB does not exist")            
+            self.retval = "DB does not exist"           
 
     def _addrow(self,db_name,cond):
         try:
@@ -72,14 +71,14 @@ class Query:
             print ("Wrong record format")
             return
         if self.mid.insert(db_name,arg) is not None:
-            print ("Success")
+            self.retval = "Insertion successfull"
         else:
-            print ("DB does not exist")
+            self.retval = "DB does not exist"
         
         
-
+"""
 while 1:
     q=input()
     obj=Query()
     obj.match(q)
-        
+"""     
