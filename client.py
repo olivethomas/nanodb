@@ -25,12 +25,14 @@ port = 12345
 s.connect(('127.0.0.1', port)) 
 #s.send()
 
+print ("\n\t\t\t\tNANODB")
+print ("\t\t\t    -------------")
 
           
 # receive data from the server 
 print (s.recv(1024).decode())
 while 1:
-    query=input()
+    query=input("~>")
     s.send(query.encode())
     if query=="exit":
         break

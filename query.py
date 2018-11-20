@@ -35,7 +35,6 @@ class Query:
         if isinstance(func, int):
             self.retval = "Invalid query syntax"
             return self.retval
-        
         func(self.tablename,self.cond)
         return self.retval
 
@@ -45,7 +44,9 @@ class Query:
             "display" : self._display,
             #"showrow" : self.mid.displayrow,
             #"showcol" : self.mid.displaycol,
-            "addrow" : self._addrow
+            "addrow" : self._addrow,
+            "purge" : self._purge,
+            "delete": self._delete
             }
         try:
             func = d[self.instr]
@@ -54,8 +55,17 @@ class Query:
         return func
 
     def _create(self,db_name,cond):
-        self.mid.create(db_name)
-        self.retval="Creation successfull"
+        if(cond!=""):
+            self.retval = "Invalid query syntax"
+        else:
+            res = self.mid.create(db_name)
+            if(res):
+                self.retval = "Creation successful"
+            elif(res==-1):
+                self.retval = "Could not create the table."
+            elif(res==0):
+                self.retval = "Table already exists"
+            
 
     def _display(self,db_name,cond):
         data = self.mid.view_records(db_name)
@@ -71,9 +81,28 @@ class Query:
             print ("Wrong record format")
             return
         if self.mid.insert(db_name,arg) is not None:
-            self.retval = "Insertion successfull"
+            self.retval = "Insertion successful"
         else:
             self.retval = "DB does not exist"
+
+    def _purge(self,db_name,cond):
+        if(cond != ""):
+            self.retval = "Invalid query syntax"
+        else:
+            res = self.mid.purge(db_name)
+            if res:
+                self.retval = "Purge successful"
+            else:
+                self.retval = "DB does not exist"
+
+    def _delete(self,db_name,cond):
+        res = self.mid.delete(db_name)
+        if res:
+            self.retval = "Deletion successful"
+        else:
+            self.retval = "DB does not exist"
+            
+        
         
         
 """

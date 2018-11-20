@@ -8,14 +8,14 @@ class Midlayer:
     def opendb(self,db_name):
         self.file_obj=Storage(db_name)
         if self.file_obj.fptr is None:
-            print ("db does not exist")
             return 0
         return 1
             
     def create(self,db_name):
         self.file_obj=Storage(db_name)
-        self.file_obj.fcreate(db_name)
-        return 1
+        if self.file_obj.fcreate(db_name):
+            return 1
+        return 0
 
     def view_records(self,db_name):
         if self.opendb(db_name):
@@ -37,6 +37,15 @@ class Midlayer:
             record[self.id]=data
             self.file_obj.fwrite(record,db_name)
             return self.id
+        
+    def purge(self,db_name):
+        self.file_obj=Storage(db_name)
+        return self.file_obj.fpurge(db_name)
+
+    def delete(self,db_name):
+        if self.opendb(db_name):
+            return self.file_obj.fdelete(db_name)
+            
 
 
     

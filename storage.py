@@ -15,9 +15,14 @@ class Storage:
     def fcreate(self,fname,mode="r"):
         filename=str(fname)+".json"
         if not os.path.isfile(filename):
-            self.fptr=open(filename,"w")
-            #self.fptr.write("{}")
-            self.fptr.close()
+            try:
+                self.fptr=open(filename,"w")
+                self.fptr.close()
+                return 1
+            except:
+                return -1                
+        else:
+            return 0
         #self.fptr=open(filename,mode)
         
 
@@ -44,7 +49,7 @@ class Storage:
     def fwrite(self,matter,fname,mode="r+"):
         data=self.fread(fname)
         if self.fopen(fname,mode)==0:
-            return
+            return -1
         self.fptr.seek(0,0)
         data.update(matter)
         #print (data)
@@ -54,6 +59,23 @@ class Storage:
 
     def fclose(self):
         self.fptr.close()
+
+    def fpurge(self,fname):
+        filename=str(fname)+".json"
+        if os.path.exists(filename):
+            os.remove(filename)
+            return 1
+        else:
+            return -1
+
+    def fdelete(self,fname):
+        filename=str(fname)+".json"
+        if os.path.exists(filename):
+            self.fptr=open(filename,"w")
+            return 1
+        else:
+            return -1
+
 
 
 #x=storage("table1","r+")
