@@ -34,6 +34,20 @@ class Storage:
             self.fptr=open(filename,mode)
             return 1
 
+    def fgetmetadata(self,fname):
+        if self.fopen(fname)==0:
+            return -1
+        self.fptr.seek(0,0)
+        #self.data=json.loads(self.fptr.read())
+        try:
+            self.metadata = json.loads(self.fptr.read())["0"]
+            self.metadata["lastid"]
+        except ValueError:
+            self.metadata ={}
+        self.fclose()
+        return self.metadata
+        
+
     def fread(self,fname):
         if self.fopen(fname)==0:
             return -1

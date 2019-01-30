@@ -78,8 +78,8 @@ class Query:
         try:
             arg = json.loads(cond)
         except json.decoder.JSONDecodeError:
-            print ("Wrong record format")
-            return
+            self.retval = "Wrong record format"
+            return self.retval 
         if self.mid.insert(db_name,arg) is not None:
             self.retval = "Insertion successful"
         else:
@@ -90,7 +90,7 @@ class Query:
             self.retval = "Invalid query syntax"
         else:
             res = self.mid.purge(db_name)
-            if res:
+            if res==1:
                 self.retval = "Purge successful"
             else:
                 self.retval = "DB does not exist"
