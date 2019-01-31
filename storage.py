@@ -55,6 +55,7 @@ class Storage:
         #self.data=json.loads(self.fptr.read())
         try:
             self.data = json.loads(self.fptr.read())
+            del self.data["0"]
         except ValueError:
             self.data ={}
         self.fclose()
